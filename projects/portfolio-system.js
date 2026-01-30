@@ -22,10 +22,10 @@ class PortfolioSystem {
         this.init();
     }
 
-    async init() {
+    init() {
         try {
             console.log('Portfolio system initializing...');
-            await this.loadProjects();
+            this.loadProjects();
             this.setupEventListeners();
             this.renderProjects();
             this.initializeAnimations();
@@ -39,17 +39,17 @@ class PortfolioSystem {
     /**
      * Dynamically load projects from folder structure
      */
-    async loadProjects() {
+    loadProjects() {
         this.isLoading = true;
         this.showLoadingState();
         
         try {
             // Load project configurations
-            const projectConfigs = await this.fetchProjectConfigs();
+            const projectConfigs = this.fetchProjectConfigs();
             
             // Process each project
             for (const config of projectConfigs) {
-                const project = await this.processProject(config);
+                const project = this.processProject(config);
                 if (project) {
                     this.projects.push(project);
                 }
@@ -73,7 +73,7 @@ class PortfolioSystem {
     /**
      * Fetch project configurations from JSON files
      */
-    async fetchProjectConfigs() {
+    fetchProjectConfigs() {
         // Your actual GitHub projects with website previews
         const defaultProjects = [
             {
@@ -212,7 +212,7 @@ class PortfolioSystem {
     /**
      * Process individual project data
      */
-    async processProject(config) {
+    processProject(config) {
         try {
             // Validate required fields
             if (!config.id || !config.title || !config.liveUrl) {
@@ -221,7 +221,7 @@ class PortfolioSystem {
             }
 
             // Process thumbnail
-            const thumbnail = await this.processThumbnail(config.thumbnail, config.id);
+            const thumbnail = this.processThumbnail(config.thumbnail, config.id);
 
             return {
                 ...config,
@@ -240,30 +240,15 @@ class PortfolioSystem {
     /**
      * Process project thumbnail with website preview
      */
-    async processThumbnail(thumbnailUrl, projectId) {
+    processThumbnail(thumbnailUrl, projectId) {
         // If custom thumbnail is provided, use it
         if (thumbnailUrl && thumbnailUrl.trim() !== '') {
             return thumbnailUrl;
         }
 
-        // Generate website preview using screenshot service
-        const project = this.projects.find(p => p.id === projectId);
-        if (project && project.liveUrl) {
-            // Use multiple screenshot services for reliability
-            const screenshotServices = [
-                `https://api.screenshotone.com/take?url=${encodeURIComponent(project.liveUrl)}&width=400&height=300&format=jpg&device=desktop&scale_factor=1&full_page=false`,
-                `https://htmlcsstoimage.com/demo_run/screenshot?url=${encodeURIComponent(project.liveUrl)}&width=400&height=300`,
-                `https://screenshot.abstractapi.com/v1/?api_key=free&url=${encodeURIComponent(project.liveUrl)}&width=400&height=300`,
-                // Fallback to a generic website preview service
-                `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(project.liveUrl)}&screenshot=true`
-            ];
-
-            // Return the first service URL (will be tried in order if it fails)
-            return screenshotServices[0];
-        }
-
-        // Final fallback to placeholder
-        return `https://picsum.photos/400/300?random=${projectId}`;
+        // For now, just return the thumbnail URL directly
+        // In a real implementation, you might want to generate screenshots
+        return thumbnailUrl || `https://picsum.photos/400/300?random=${projectId}`;
     }
 
     /**
