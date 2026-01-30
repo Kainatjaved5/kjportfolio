@@ -24,10 +24,12 @@ class PortfolioSystem {
 
     async init() {
         try {
+            console.log('Portfolio system initializing...');
             await this.loadProjects();
             this.setupEventListeners();
             this.renderProjects();
             this.initializeAnimations();
+            console.log('Portfolio system initialized successfully with', this.projects.length, 'projects');
         } catch (error) {
             console.error('Portfolio system initialization failed:', error);
             this.showError('Failed to load portfolio projects');
@@ -734,4 +736,6 @@ class PortfolioSystem {
 let portfolioSystem;
 document.addEventListener('DOMContentLoaded', () => {
     portfolioSystem = new PortfolioSystem();
+    // Expose to global scope for other scripts
+    window.portfolioSystem = portfolioSystem;
 });
