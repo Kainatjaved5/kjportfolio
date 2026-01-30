@@ -735,7 +735,16 @@ class PortfolioSystem {
 // Initialize portfolio system
 let portfolioSystem;
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded, initializing portfolio system...');
     portfolioSystem = new PortfolioSystem();
     // Expose to global scope for other scripts
     window.portfolioSystem = portfolioSystem;
+    
+    // Test: Show that JavaScript is working
+    const grid = document.getElementById('projects-grid');
+    if (grid) {
+        console.log('Projects grid found:', grid);
+    } else {
+        console.error('Projects grid not found!');
+    }
 });
